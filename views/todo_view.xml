@@ -1,0 +1,73 @@
+<odoo>
+    <record id="all_tasks_action" model="ir.actions.act_window">
+        <field name="name">To-Do App</field>
+        <field name="res_model">todo.task</field>
+    </record>
+
+    <menuitem
+            id="all_tasks_action_menu"
+            name="All Tasks"
+            parent="todo_sub_menu"
+            action="all_tasks_action"
+    />
+
+
+    <record id="todo_tree_view" model="ir.ui.view">
+        <field name="name">todo tree</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="1" class="table_style">
+                <field name="task_name"/>
+                <field name="assign_to"/>
+                <field name="description"/>
+                <field name="due_date"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="todo_form_view" model="ir.ui.view">
+        <field name="name">todo form</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="task_name"/>
+                            <field name="assign_to"/>
+                            <field name="description"/>
+                        </group>
+
+                        <group>
+                            <field name="status" widget="statusbar" options="{'clickable': 1}"/>
+                            <field name="due_date"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="todo_search" model="ir.ui.view">
+        <field name="name">todo search</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="task_name"/>
+                <field name="assign_to"/>
+
+                <filter name="status" string="New Tasks" domain="[('status','=','new')]"/>
+                <filter name="status" string="In Progress Tasks" domain="[('status','=','in_progress')]"/>
+                <filter name="status" string="Completed Tasks" domain="[('status','=','completed')]"/>
+
+                <filter name="assign_to" string="Assign To" context="{'group_by':'assign_to'}"/>
+                <filter name="due_date" string="Due Date" context="{'group_by':'due_date'}"/>
+                <filter name="status" string="Status" context="{'group_by':'status'}"/>
+
+            </search>
+        </field>
+    </record>
+</odoo>

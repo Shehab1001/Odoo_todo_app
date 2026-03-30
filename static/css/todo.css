@@ -1,0 +1,4 @@
+.table_style table thead > tr > th {
+    background-color: #ce9aff !important;
+    font-weight: bold !important;
+}
