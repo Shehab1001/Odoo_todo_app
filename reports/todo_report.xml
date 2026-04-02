@@ -1,0 +1,123 @@
+<odoo>
+    <record id="todo_report" model="ir.actions.report">
+        <field name="name">Tasks Report</field>
+        <field name="model">todo.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">todo_management.todo_report_template</field>
+    </record>
+
+    <template id="todo_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="rec">
+                <t t-call="web.external_layout">
+                    <style>
+                        .page {
+                        font-size: 20px;
+                        }
+                        .page .line {
+                        margin-bottom: 10px;
+                        }
+                        .page .line .title {
+                        font-weight: bold;
+                        margin-right: 8px;
+                        }
+
+                        .paragraph{
+                        margin-bottom:50px;
+                        }
+
+                        .desc .dec-title{
+                        font-weight: bold;
+                        display: block;
+                        }
+
+                        table {
+                        width: 100%;
+                        margin-top: 20px;
+                        padding: 8px;
+                        border-collapse: collapse;
+                        text-align: center;
+                        }
+
+                        table thead th {
+                            font-weight: bold;
+                            padding: 5px;
+                        }
+                    </style>
+                    <div class="page">
+                        <div class="paragraph">
+                            <div class="line">
+                                <span class="title">Task:</span>
+                                <span t-field="rec.task_name"/>
+                            </div>
+
+                            <div class="line">
+                                <span class="title">Due Date:</span>
+                                <span t-field="rec.due_date"/>
+                            </div>
+
+                            <div class="line">
+                                <span class="title">Assign To:</span>
+                                <span t-field="rec.assign_to"/>
+                            </div>
+
+                            <div class="line">
+                                <span class="title">Estimated Time:</span>
+                                <span t-field="rec.estimated_time"/>
+                                <span>H</span>
+                            </div>
+                        </div>
+
+                        <div class="desc">
+                            <span class="dec-title">Description:</span>
+                            <span t-field="rec.description"/>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <th colspan="4">Timesheet</th>
+                            </thead>
+                            <thead>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Time</th>
+                            </thead>
+                            <tobody>
+                                <t t-foreach="rec.timesheet_ids" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <span t-field="line.id"/>
+                                        </td>
+                                        <td>
+                                                <span t-field="line.create_date" t-options='{"widget": "datetime", "format": "dd/MM/yyyy"}'/>                                        </td>
+                                          <td>
+                                            <span t-field="line.description"/>
+                                        </td>
+                                         <td>
+                                            <span t-field="line.total_time"/>
+                                                  <span> H</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tobody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3">Total Time</td>
+                                    <td>
+                                        <span t-field="rec.total_time" sum="total time"/>
+                                        <span> H</span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

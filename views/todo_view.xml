@@ -4,6 +4,27 @@
         <field name="res_model">todo.task</field>
     </record>
 
+    <record id="task_action_close" model="ir.actions.server">
+        <field name="name">Close</field>
+        <field name="model_id" ref="model_todo_task"/>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_close()
+        </field>
+    </record>
+
+    <record id="check_due_date_cron" model="ir.cron">
+        <field name="name">check due date</field>
+        <field name="model_id" ref="model_todo_task"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="state">code</field>
+        <field name="code">model.check_due_date()</field>
+    </record>
+
+
     <menuitem
             id="all_tasks_action_menu"
             name="All Tasks"
@@ -16,12 +37,13 @@
         <field name="name">todo tree</field>
         <field name="model">todo.task</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1" class="table_style">
+            <tree multi_edit="1" class="table_style" decoration-danger="(is_late)">
                 <field name="task_name"/>
                 <field name="assign_to"/>
                 <field name="description"/>
                 <field name="due_date"/>
                 <field name="status"/>
+                <field name="is_late" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -37,19 +59,31 @@
                             <field name="task_name"/>
                             <field name="assign_to"/>
                             <field name="description"/>
+                            <field name="is_late" invisible="1"/>
                         </group>
 
                         <group>
                             <field name="status" widget="statusbar" options="{'clickable': 1}"/>
                             <field name="due_date"/>
-
+                            <field name="estimated_time"/>
+                            <field name="active"/>
                         </group>
-
                     </group>
+                    <notebook>
+                        <page string="Timesheets">
+                            <field name="timesheet_ids">
+                                <tree editable="bottom">
+                                    <field name="description"/>
+                                    <field name="total_time" sum="total time"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
+
 
     <record id="todo_search" model="ir.ui.view">
         <field name="name">todo search</field>
